@@ -15,4 +15,8 @@ endif ()
 
 target_include_directories(acme_lw PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/../internal ${OPENSSL_INCLUDE_DIR})
 
+find_package (CURL REQUIRED)
+find_package (OpenSSL REQUIRED)
+
 target_link_libraries(acme_lw PRIVATE ${OPENSSL_LIBRARIES})
+target_link_libraries(acme_lw PRIVATE ${CURL_LIBRARIES})

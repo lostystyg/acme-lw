@@ -1,9 +1,6 @@
 cmake_minimum_required(VERSION 3.2)
 project (acme_lw_client)
 
-find_package (CURL REQUIRED)
-find_package (OpenSSL REQUIRED)
-
 set (acme_lw_client_VERSION_MAJOR 0)
 set (acme_lw_client_VERSION_MINOR 3)
 set (acme_lw_client_VERSION_PATCH 0)
