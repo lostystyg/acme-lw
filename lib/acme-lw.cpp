@@ -592,7 +592,7 @@ private:
 };
 
 AcmeClient::AcmeClient(const string& accountPrivateKey)
-    : impl_(new AcmeClientImpl(accountPrivateKey))
+    : impl_(std::make_unique<AcmeClientImpl>(accountPrivateKey))
 {
 }
 
