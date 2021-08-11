@@ -399,8 +399,7 @@ struct AcmeClientImpl
         pair<string, string> header = make_pair("location"s, ""s);
         sendRequest<string>(newAccountUrl, u8R"(
                                                 {
-                                                    "termsOfServiceAgreed": true,
-                                                    "onlyReturnExisting": true
+                                                    "termsOfServiceAgreed": true
                                                 }
                                                 )", &header);
         headerSuffix_ = u8R"(
