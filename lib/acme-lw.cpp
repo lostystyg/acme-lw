@@ -570,16 +570,18 @@ struct AcmeClientImpl
         auto r = makeCertificateSigningRequest(domainNames);
         string csr = r.first;
         string privateKey = r.second;
-        string certificateUrl = nlohmann::json::parse(sendRequest<vector<char>>(json.at("finalize"),
+        auto certificateFinalizeResponse = sendRequest<vector<char>>(json.at("finalize"),
                                                 u8R"(   {
                                                             "csr": ")"s + csr + u8R"("
-                                                        })")).at("certificate");
+                                                        })");
+        auto jsonRes = nlohmann::json::parse(certificateFinalizeResponse);
 
         // Wait for the certificate to be produced
-        wait(currentOrderUrl, "Timeout / failure waiting for certificate to be produced");
+        auto produceCertResponse = wait(currentOrderUrl, "Timeout / failure waiting for certificate to be produced");
 
         // Retreive the certificate
         Certificate cert;
+        string certificateUrl = produceCertResponse.at("certificate");
         cert.fullchain = doPostAsGet(certificateUrl);
         cert.privkey = privateKey;
         return cert;
