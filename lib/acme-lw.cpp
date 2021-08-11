@@ -473,7 +473,7 @@ struct AcmeClientImpl
         constexpr int count = 10;
         do
         {
-            ::usleep(1'000'000);    // sleep for a second
+            Sleeper::Sleep(1000);    // sleep for a second
             string response = doPostAsGet(url);
             auto json = nlohmann::json::parse(response);
             if (json.at("status") == "valid")
