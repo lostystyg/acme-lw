@@ -249,32 +249,32 @@ pair<string, string> makeCertificateSigningRequest(const std::list<std::string>&
         throw acme_lw::AcmeException("Failure in X509_Name_add_entry_by_txt");
     }
 
-    if (++name != domainNames.end())
+
+    // We have one or more Subject Alternative Names
+    X509_EXTENSIONSptr extensions(sk_X509_EXTENSION_new_null());
+
+    string value;
+    do
     {
-        // We have one or more Subject Alternative Names
-        X509_EXTENSIONSptr extensions(sk_X509_EXTENSION_new_null());
-
-        string value;
-        do
+        if (!value.empty())
         {
-            if (!value.empty())
-            {
-                value += ", ";
-            }
-            value += "DNS:" + *name;
+            value += ", ";
         }
-        while (++name != domainNames.end());
-
-        if (!sk_X509_EXTENSION_push(*extensions, X509V3_EXT_conf_nid(nullptr, nullptr, NID_subject_alt_name, value.c_str())))
-        {
-            throw acme_lw::AcmeException("Unable to add Subject Alternative Name to extensions");
-        }
-
-        if (X509_REQ_add_extensions(*req, *extensions) != 1)
-        {
-            throw acme_lw::AcmeException("Unable to add Subject Alternative Names to CSR");
-        }
+        value += "DNS:" + *name;
+        name++;
     }
+    while (name != domainNames.end());
+
+    if (!sk_X509_EXTENSION_push(*extensions, X509V3_EXT_conf_nid(nullptr, nullptr, NID_subject_alt_name, value.c_str())))
+    {
+        throw acme_lw::AcmeException("Unable to add Subject Alternative Name to extensions");
+    }
+
+    if (X509_REQ_add_extensions(*req, *extensions) != 1)
+    {
+        throw acme_lw::AcmeException("Unable to add Subject Alternative Names to CSR");
+    }
+    
 
     EVP_PKEYptr key(EVP_PKEY_new());
     if (!EVP_PKEY_assign_RSA(*key, *rsa))
