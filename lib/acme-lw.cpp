@@ -466,7 +466,7 @@ struct AcmeClientImpl
         return sendRequest<string>(url, "");
     }
 
-    void wait(const string& url, const char * errorText)
+    nlohmann::json wait(const string& url, const char * errorText)
     {
         // Poll waiting for response to the url be 'status': 'valid'
         int counter = 0;
@@ -478,7 +478,7 @@ struct AcmeClientImpl
             auto json = nlohmann::json::parse(response);
             if (json.at("status") == "valid")
             {
-                return;
+                return json;
             }
         } while (counter++ < count);
 
